@@ -37,6 +37,20 @@ app.post('/api/user/', (request, response) => {
     })
 });
 
+app.put("/api/user/:id", (request, response) => {
+    const id = parseInt(request.params.id);
+    const { email } = request.body.email;
+
+    if (email) {
+        pool.query("UPDATE users SET email = $1 WHERE id = $2;", [email, id], (err, results) => {
+            if (err) {
+                console.log(err.message);
+            }    
+            response.status(200).send(`User modified with ID: ${id}`)
+        })
+    }
+})
+
 app.get('/', (request, response) => {
     response.json("Server Online")
 })
