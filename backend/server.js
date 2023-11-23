@@ -4,13 +4,13 @@ const app = express();
 const pool = require('./db')
 
 
-app.use(cors()); 
+app.use(cors());
 
 const port = 3600;
 
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 const users = [];
 
@@ -26,7 +26,7 @@ app.get("/api/users", (request, response) => {
 })
 
 app.post('/api/user/', (request, response) => {
-    const {id, firstName, lastName, email } = request.body;
+    const { id, firstName, lastName, email } = request.body;
 
     pool.query("INSERT INTO users (id, firstName, lastName, email) VALUES ($1, $2, $3, $4)", [id, firstName, lastName, email], (err, result) => {
         if (err) {
