@@ -7,7 +7,7 @@ const pool = require('./db')
 app.use(cors()); 
 
 const port = 3600;
-//const bodyParser = require('body-parser');
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -15,9 +15,6 @@ app.use(express.urlencoded({extended: true}));
 const users = [];
 
 
-// app.get('/api/users', (request, response) => {
-//     response.json(users)
-// });
 app.get("/api/users", (request, response) => {
     pool.query("SELECT * FROM users ORDER BY id ASC", (err, result) => {
         if (err) {
@@ -29,16 +26,6 @@ app.get("/api/users", (request, response) => {
 })
 
 app.post('/api/user/', (request, response) => {
-    // set data to user object
-    // const user = {
-    //     id: request.body.id, // get id from user in the request
-    //     firstName: request.body.firstName, // get name from user in the request
-    //     lastName: request.body.lastName,
-    //     email: request.body.email
-
-    //}
-   // users.push(user); //Insert data into the array
-
     const {id, firstName, lastName, email } = request.body;
 
     pool.query("INSERT INTO users (id, firstName, lastName, email) VALUES ($1, $2, $3, $4)", [id, firstName, lastName, email], (err, result) => {
