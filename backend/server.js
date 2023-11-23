@@ -30,15 +30,24 @@ app.get("/api/users", (request, response) => {
 
 app.post('/api/user/', (request, response) => {
     // set data to user object
-    const user = {
-        id: request.body.id, // get id from user in the request
-        firstName: request.body.firstName, // get name from user in the request
-        lastName: request.body.lastName,
-        email: request.body.email
+    // const user = {
+    //     id: request.body.id, // get id from user in the request
+    //     firstName: request.body.firstName, // get name from user in the request
+    //     lastName: request.body.lastName,
+    //     email: request.body.email
 
-    }
-    users.push(user); //Insert data into the array
-    response.json('succesfully added: ' + user); 
+    //}
+   // users.push(user); //Insert data into the array
+
+    const {id, firstName, lastName, email } = request.body;
+
+    pool.query("INSERT INTO users (id, firstName, lastName, email) VALUES ($1, $2, $3, $4)", [id, firstName, lastName, email], (err, result) => {
+        if (err) {
+            console.log(err.message)
+        } else {
+            response.status(201).send("A User has been added" + result.rows)
+        }
+    })
 });
 
 app.get('/', (request, response) => {
