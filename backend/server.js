@@ -1,21 +1,32 @@
 const express = require('express')
 const cors = require('cors')
 const app = express();
+const pool = require('./db')
+
 
 app.use(cors()); 
 
 const port = 3600;
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 const users = [];
 
 
-app.get('/api/users', (request, response) => {
-    response.json(users)
-});
+// app.get('/api/users', (request, response) => {
+//     response.json(users)
+// });
+app.get("/api/users", (request, response) => {
+    pool.query("SELECT * FROM users ORDER BY id ASC", (err, result) => {
+        if (err) {
+            console.log(err.message)
+        }
+
+        response.status(200).json(result.rows)
+    })
+})
 
 app.post('/api/user/', (request, response) => {
     // set data to user object
@@ -31,9 +42,11 @@ app.post('/api/user/', (request, response) => {
 });
 
 app.get('/', (request, response) => {
-    res.json("Server Online")
+    response.json("Server Online")
 })
 
 app.listen(port, () => {
     console.log(`Server listening on port::${port}`)
 });
+
+
