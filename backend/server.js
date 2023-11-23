@@ -12,7 +12,6 @@ const port = 3600;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const users = [];
 
 
 app.get("/api/users", (request, response) => {
@@ -25,7 +24,7 @@ app.get("/api/users", (request, response) => {
     })
 })
 
-app.post('/api/user/', (request, response) => {
+app.post('/api/user', (request, response) => {
     const { id, firstName, lastName, email } = request.body;
 
     pool.query("INSERT INTO users (id, firstName, lastName, email) VALUES ($1, $2, $3, $4)", [id, firstName, lastName, email], (err, result) => {
@@ -44,7 +43,7 @@ app.put("/api/user/:id", (request, response) => {
     if (email) {
         pool.query("UPDATE users SET email = $1 WHERE id = $2;", [email, id], (err, results) => {
             if (err) {
-                console.log(err.message);
+                response.json(err.message)
             }    
             response.status(200).send(`User modified with ID: ${id}`)
         })
